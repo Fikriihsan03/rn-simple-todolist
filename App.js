@@ -1,41 +1,42 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import {
-  Button,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Button, StyleSheet, View } from "react-native";
+
 import InputField from "./components/InputField";
 import ListField from "./components/ListField";
 
 export default function App() {
-  const [todoText, setTodoText] = useState("");
   const [todoList, setTodoList] = useState([]);
+  const [isInputModalVisible, setIsInputModalVisible] = useState(false);
 
-  function todoSubmitHandler() {
-    if (todoText === "") {
+  function todoSubmitHandler(enteredText) {
+    if (enteredText === "") {
       alert("isi woy");
     } else {
       setTodoList((currentList) => [
         ...currentList,
         {
-          key: Date.now(),
-          todo: todoText,
+          id: Date.now(),
+          todo: enteredText,
         },
       ]);
-      setTodoText("");
     }
   }
-
+  function todoDeleteHandler(id) {
+    setTodoList((currentList) => {
+      return currentList.filter((todo) => todo.id !== id);
+    });
+  }
   return (
     <View style={styles.container}>
-      <InputField todoText={todoText} setTodoText={setTodoText} submitHandler={todoSubmitHandler} />
-      <ListField list={todoList} />
-
-      <StatusBar style="auto" />
+      <Button title="Add list" onPress={() => setIsInputModalVisible(true)} color="#CB1C8D" />
+      <InputField
+        visible={isInputModalVisible}
+        closeModal={() => setIsInputModalVisible(false)}
+        todoSubmitHandler={todoSubmitHandler}
+      />
+      <ListField list={todoList} deleteTask={todoDeleteHandler} />
+      <StatusBar style="light" />
     </View>
   );
 }
@@ -45,6 +46,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 18,
+    backgroundColor:"#460C68"
   },
-
 });

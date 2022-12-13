@@ -1,18 +1,21 @@
-import { FlatList, StyleSheet, View, Text } from "react-native";
+import { Pressable, FlatList, StyleSheet, View, Text } from "react-native";
 
-const ListField = ({ list }) => {
+const ListField = ({ list, deleteTask }) => {
   return (
     <View style={styles.listContainer}>
       <FlatList
         data={list}
         renderItem={({ item, index }) => {
           return (
-            <View style={styles.listItem}>
-              <Text style={styles.itemText}>{item.todo}</Text>
-            </View>
+            <Pressable android_ripple={{color:"#dddddd"}} onPress={deleteTask.bind(this,item.id)} style={(props)=>console.log(props)} >
+              <View style={styles.listItem}>
+                <Text style={styles.itemText}>{item.todo}</Text>
+              </View>
+            </Pressable>
           );
         }}
         showsVerticalScrollIndicator={false}
+        keyExtractor={(item,index)=>item.id}
       />
     </View>
   );
@@ -22,17 +25,15 @@ export default ListField;
 
 const styles = StyleSheet.create({
   listContainer: {
-    flex: 5,
+    marginTop:25,
   },
   listItem: {
-    padding: 8,
-    margin: 8,
-    backgroundColor: "#4B56D2",
+    backgroundColor: "#7F167F",
     borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "#472183",
+    margin:8,
   },
   itemText: {
+    padding: 8,
     color: "white",
   },
 });
